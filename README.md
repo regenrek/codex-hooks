@@ -22,13 +22,26 @@ chmod +x "${CODEX_HOME:-$HOME/.codex}/hooks/instruct/hook_instruct.sh"
 
 ## Hook wiring
 
-Use your hook config to invoke:
+Edit `~/.codex/config.toml` and register this script on the event that runs before each response:
 
 ```bash
 "${CODEX_HOME:-$HOME/.codex}/hooks/instruct/hook_instruct.sh"
 ```
 
-Attach it to your per-turn/pre-response hook event.
+Use this config shape:
+
+```toml
+[hooks]
+pre_turn = ["${CODEX_HOME:-$HOME/.codex}/hooks/instruct/hook_instruct.sh"]
+```
+
+How it works:
+
+- the hook runner executes `hook_instruct.sh` on each turn before response generation
+- the script prints policy text from `hook_instruct.md` to stdout
+- missing/empty policy file exits non-zero to fail fast
+
+If your Codex build does not expose a `[hooks]` config section yet, there is no hook-event setting to change in that build.
 
 ## Validate
 
